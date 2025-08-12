@@ -4,7 +4,7 @@
     import Layout from './components/layouts/Layout.vue';
     import Dashboard from './components/pages/Dashboard.vue';
 
-    const selectedDisplay = 2;
+    const selectedDisplay = 3;
 </script>
 
 <template>

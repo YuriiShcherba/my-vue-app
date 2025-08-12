@@ -23,5 +23,7 @@
 </template>
 
 <style scoped>
-
+    #dashboard .card.tip-container {
+        margin-bottom: 1rem;
+    }
 </style>
