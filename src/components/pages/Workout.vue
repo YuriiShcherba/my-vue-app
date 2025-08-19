@@ -1,18 +1,24 @@
 <script setup>
     import { workoutProgram } from '../../utils';
+    import Portal from '../Portal.vue';
+
     const selectedWorkout = 4;
-    const { workout, warmup } = workoutProgram[selectedWorkout]
+    const selectedExercise = 'Lat pull down';
+    const { workout, warmup } = workoutProgram[selectedWorkout];
 </script>
 
 <template>
-    <Portal></Portal>
+    <Portal>
+        <h4>PUSHUPS</h4>
+    </Portal>
     <section id="workout-card">
         <div class="plan-card card" card>
-            <div class="plan-card-header"></div>
-            <p>Day {{ selectedWorkout < 9 ? '0' + selectedWorkout : selectedWorkout }}</p>
-            <i class="fa-solid fa-dumbbell" v-if="selectedWorkout % 3 == 0"></i>
-            <i class="fa-solid fa-weight-hanging" v-if="selectedWorkout % 3 == 1"></i>
-            <i class="fa-solid fa-bolt" v-if="selectedWorkout % 3 == 2"></i>
+            <div class="plan-card-header">
+                <p>Day {{ selectedWorkout < 9 ? '0' + selectedWorkout : selectedWorkout }}</p>
+                <i class="fa-solid fa-dumbbell" v-if="selectedWorkout % 3 == 0"></i>
+                <i class="fa-solid fa-weight-hanging" v-if="selectedWorkout % 3 == 1"></i>
+                <i class="fa-solid fa-bolt" v-if="selectedWorkout % 3 == 2"></i>
+            </div>
             <h2 v-if="selectedWorkout % 3 == 0">Push Workout</h2>
             <h2 v-if="selectedWorkout % 3 == 1">Pull Workout</h2>
             <h2 v-if="selectedWorkout % 3 == 2">Legs Workout</h2>
@@ -46,7 +52,7 @@
                 <input type="text" class="grid-weights" placeholder="14kg" >
             </div>
         </div>
-        <div class="card">
+        <div class="card workout-btns">
             <button>Save and exit <i class="fa-solid fa-save"></i></button>
             <button>Complete <i class="fa-solid fa-check"></i></button>
         </div>
@@ -54,7 +60,7 @@
 </template>
 
 <style scoped>
-    #workout-card,
+     #workout-card,
     .plan-card {
         display: flex;
         flex-direction: column;
