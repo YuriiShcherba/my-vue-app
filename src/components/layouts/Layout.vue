@@ -4,7 +4,7 @@
 
 <template>
     <header>
-        <h1 class="text-gradient">App Header</h1>
+        <h1>App Header</h1>
     </header>
     <main>
         <slot />

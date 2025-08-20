@@ -1,15 +1,33 @@
 <script setup>
-    import { workoutProgram } from '../../utils';
+    import { ref, computed } from 'vue';
+    import { workoutProgram, exerciseDescriptions } from '../../utils';
     import Portal from '../Portal.vue';
 
-    const selectedWorkout = 4;
-    const selectedExercise = 'Lat pull down';
+    const { data, selectedWorkout } = defineProps({
+        data: Object,
+        selectedWorkout: Number
+    });
+
+    let selectedExercise = ref(null);
     const { workout, warmup } = workoutProgram[selectedWorkout];
+    let exerciseDescription = computed(() => exerciseDescriptions[selectedExercise.value]);
+
+    const handleCloseModal = () => {
+        selectedExercise.value = null
+    }
+
 </script>
 
 <template>
-    <Portal>
-        <h4>PUSHUPS</h4>
+    <Portal :handleCloseModal="handleCloseModal" v-if="selectedExercise">
+        <div class="exercise-description">
+            <h3>{{ selectedExercise }}</h3>
+            <div>
+                <small>Description</small>
+                <p>{{ exerciseDescription }}</p>
+            </div>
+            <button  @click="handleCloseModal">Close <i class="fa-solid fa-xmark"></i></button>
+        </div>
     </Portal>
     <section id="workout-card">
         <div class="plan-card card" card>
@@ -31,7 +49,7 @@
             <div class="workout-grid-row" v-for="(w, wIdx) in warmup" :key="wIdx">
                 <div class="grid-name">
                     <p>{{ w.name }}</p>
-                    <button><i class="fa-regular fa-circle-question"></i></button>
+                    <button @click="() => {selectedExercise = w.name}"><i class="fa-regular fa-circle-question"></i></button>
                 </div>
                 <p>{{ w.sets }}</p>
                 <p>{{ w.reps }}</p>
@@ -45,11 +63,11 @@
             <div class="workout-grid-row" v-for="(w, wIdx) in workout" :key="wIdx">
                 <div class="grid-name">
                     <p>{{ w.name }}</p>
-                    <button><i class="fa-regular fa-circle-question"></i></button>
+                    <button @click="() => {selectedExercise = w.name}"><i class="fa-regular fa-circle-question"></i></button>
                 </div>
                 <p>{{ w.sets }}</p>
                 <p>{{ w.reps }}</p>
-                <input type="text" class="grid-weights" placeholder="14kg" >
+                <input v-model="data[selectedWorkout][w.name]" type="text" class="grid-weights" placeholder="14kg" >
             </div>
         </div>
         <div class="card workout-btns">

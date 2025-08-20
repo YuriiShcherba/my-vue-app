@@ -1,11 +1,14 @@
 <script setup>
     import { workoutProgram } from '../utils';
     const workoutTypes = ['Push', 'Pull', 'Legs']
+    defineProps({
+        handleSelectWorkout: Function
+    });
 </script>
 
 <template>
     <section id="grid">
-        <button :key="workoutIdx" v-for="(workout, workoutIdx) in Object.keys(workoutProgram)" class="acrd-button plan-card">
+        <button @click="handleSelectWorkout(workoutIdx)" :key="workoutIdx" v-for="(workout, workoutIdx) in Object.keys(workoutProgram)" class="acrd-button plan-card">
             <div>
                 <p>Day {{ workoutIdx < 9 ? '0' + (workoutIdx + 1) : workoutIdx + 1 }}</p>
                 <i class="fa-solid fa-dumbbell" v-if="workoutIdx % 3 == 0"></i>
