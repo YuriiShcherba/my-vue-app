@@ -5,7 +5,8 @@
     const randomNumber = Math.floor(Math.random() * gymHealthFacts.length);
     const todaysFact = gymHealthFacts[randomNumber];
     const props = defineProps({
-        handleSelectWorkout: Function
+        handleSelectWorkout: Function,
+        firstIncompleteWorkoutIndex: Number
     });
 </script>
 
@@ -19,7 +20,7 @@
                     {{ todaysFact }}
                 </p>
             </div>
-            <button>Start workout &rarr;</button>
+            <button @click="() => handleSelectWorkout(firstIncompleteWorkoutIndex < 0 ? 0 : firstIncompleteWorkoutIndex)">Start workout &rarr;</button>
         </div>
         <Grid v-bind="props" />
     </section>

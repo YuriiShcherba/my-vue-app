@@ -1,5 +1,5 @@
 <script setup>
-    import { ref } from 'vue';
+    import { ref, computed, onMounted } from 'vue';
     import Welcome from './components/pages/Welcome.vue';
     import Workout from './components/pages/Workout.vue';
     import Layout from './components/layouts/Layout.vue';
@@ -21,6 +21,31 @@
     const data = ref(defaultData);
     const selectedWorkout = ref(-1)
 
+    const isWorkoutComplete = computed(() => {
+        const currWorkout = data.value?.[selectedWorkout.value];
+        if (!currWorkout) {
+            return false;
+        }
+
+        const isCompleteCheck = Object.values(currWorkout).every(ex => !!ex);
+        return isCompleteCheck;
+    });
+
+    const firstIncompleteWorkoutIndex = computed(() => {
+        const allWorkouts = data.value;
+        if (!allWorkouts) { return -1; }
+
+        //loop every key value+pair and check wether workout is done or no
+        for (const [index, workout] of Object.entries(allWorkouts)) {
+            const isComplete = Object.values(workout).every(ex => !!ex);
+            if (!isComplete) {
+                return parseInt(index);
+            }
+        }
+
+        return -1;
+    });
+
     const handleChangeDisplay = (idx) => {
         selectedDisplay.value = idx
     }
@@ -28,7 +53,6 @@
     const handleSelectWorkout = (idx) => {
         selectedDisplay.value = 3;
         selectedWorkout.value = idx;
-        console.log(selectedWorkout.value);
     }
 
     const handleSaveWorkout = () => {
@@ -36,13 +60,30 @@
         selectedDisplay.value = 2;
         selectedWorkout.value = -1;
     }
+
+    const handleResetPlan = () => {
+        selectedDisplay.value = 2;
+        selectedWorkout.value = -1;
+        data.value = defaultData;
+        localStorage.removeItem('workouts');
+    }
+
+    onMounted(() => {
+        console.log('Mounted App.vue');
+        if (!localStorage) { return; } //safety check
+        const savedData = localStorage.getItem('workouts');
+        if (savedData) {
+            data.value = JSON.parse(savedData);
+            selectedDisplay.value = 2; //go to dashboard if there's saved data
+        }
+    });
 </script>
 
 <template>
     <Layout>
         <Welcome :handleChangeDisplay="handleChangeDisplay" v-if="selectedDisplay == 1"/>
-        <Dashboard :handleSelectWorkout="handleSelectWorkout" v-if="selectedDisplay == 2"/>
-        <Workout :data="data" :selectedWorkout="selectedWorkout" v-if="workoutProgram?.[selectedWorkout]"/>
+        <Dashboard :handleResetPlan="handleResetPlan" :firstIncompleteWorkoutIndex="firstIncompleteWorkoutIndex" :handleSelectWorkout="handleSelectWorkout" v-if="selectedDisplay == 2"/>
+        <Workout :handleSaveWorkout="handleSaveWorkout" :isWorkoutComplete="isWorkoutComplete" :data="data" :selectedWorkout="selectedWorkout" v-if="workoutProgram?.[selectedWorkout]"/>
     </Layout>
 </template>
 

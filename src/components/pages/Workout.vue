@@ -3,9 +3,13 @@
     import { workoutProgram, exerciseDescriptions } from '../../utils';
     import Portal from '../Portal.vue';
 
-    const { data, selectedWorkout } = defineProps({
+    const workoutType = ['Push', 'Pull', 'Legs']
+
+    const { data, selectedWorkout, isWorkoutComplete, handleSaveWorkout } = defineProps({
         data: Object,
-        selectedWorkout: Number
+        selectedWorkout: Number,
+        isWorkoutComplete: Boolean,
+        handleSaveWorkout: Function
     });
 
     let selectedExercise = ref(null);
@@ -32,14 +36,12 @@
     <section id="workout-card">
         <div class="plan-card card" card>
             <div class="plan-card-header">
-                <p>Day {{ selectedWorkout < 9 ? '0' + selectedWorkout : selectedWorkout }}</p>
+                <p>Day {{ selectedWorkout < 9 ? '0' + (selectedWorkout + 1) : (selectedWorkout + 1) }}</p>
                 <i class="fa-solid fa-dumbbell" v-if="selectedWorkout % 3 == 0"></i>
                 <i class="fa-solid fa-weight-hanging" v-if="selectedWorkout % 3 == 1"></i>
                 <i class="fa-solid fa-bolt" v-if="selectedWorkout % 3 == 2"></i>
             </div>
-            <h2 v-if="selectedWorkout % 3 == 0">Push Workout</h2>
-            <h2 v-if="selectedWorkout % 3 == 1">Pull Workout</h2>
-            <h2 v-if="selectedWorkout % 3 == 2">Legs Workout</h2>
+            <h2>{{ workoutType[selectedWorkout % 3] }} Workout</h2>
         </div>
         <div class="workout-grid">
             <h4 class="grid-name">Wormup</h4>
@@ -71,14 +73,14 @@
             </div>
         </div>
         <div class="card workout-btns">
-            <button>Save and exit <i class="fa-solid fa-save"></i></button>
-            <button>Complete <i class="fa-solid fa-check"></i></button>
+            <button @click="handleSaveWorkout">Save and exit <i class="fa-solid fa-save"></i></button>
+            <button :disabled="!isWorkoutComplete" @click="handleSaveWorkout">Complete <i class="fa-solid fa-check"></i></button>
         </div>
     </section>
 </template>
 
 <style scoped>
-     #workout-card,
+    #workout-card,
     .plan-card {
         display: flex;
         flex-direction: column;
