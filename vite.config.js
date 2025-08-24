@@ -5,7 +5,7 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 
 export default defineConfig({
   plugins: [
-    vueDevTools(),
+    // vueDevTools(),
     vue()],
   build: {
     rollupOptions: {
